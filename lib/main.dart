@@ -1,9 +1,4 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,9 +16,9 @@ class MyApp extends StatelessWidget {
 }
 
 class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
+  final _ceremonies = ["Ice Breakers", "Retrospectives", "Backlog Grooming", "Sprint Planning", "Stand-ups", "Sprint Review", "Showcase"];
   final _biggerFont = const TextStyle(fontSize: 18.0);
-  final _saved = Set<WordPair>();
+  final _saved = Set<String>();
 
   @override
   Widget build(BuildContext buildContext) {
@@ -43,10 +38,10 @@ class RandomWordsState extends State<RandomWords> {
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
           final Iterable<ListTile> tiles = _saved.map(
-            (WordPair pair) {
+            (String ceremony) {
               return ListTile(
                 title: Text(
-                  pair.asPascalCase,
+                  ceremony,
                   style: _biggerFont,
                 )
               );
@@ -71,23 +66,21 @@ class RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      itemBuilder: (context, i) {
-        if (i.isOdd) return Divider();
+      itemBuilder: (context, i) {        
 
-        final index = i ~/ 2;
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        return _buildRow(_suggestions[index]);
-      });
+        return _buildRow(_ceremonies[i]);
+      },
+      itemCount: (_ceremonies.length),
+      );
+      
   }
 
-  Widget _buildRow(WordPair pair) {
-    final bool alreadySaved = _saved.contains(pair);
+  Widget _buildRow(String ceremony) {
+    final bool alreadySaved = _saved.contains(ceremony);
 
     return ListTile(
       title: Text(
-        pair.asPascalCase,
+        ceremony,
         style: _biggerFont,
       ),
       trailing: Icon(
@@ -97,9 +90,9 @@ class RandomWordsState extends State<RandomWords> {
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(pair);
+            _saved.remove(ceremony);
           } else {
-            _saved.add(pair);
+            _saved.add(ceremony);
           }
         });
       }
