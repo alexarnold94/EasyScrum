@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "167947587158",
+    "firebase_url": "https://easyscrum-f37a4.firebaseio.com",
+    "project_id": "easyscrum-f37a4",
+    "storage_bucket": "easyscrum-f37a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167947587158:android:4accdf320640df3b7735f7",
+        "android_client_info": {
+          "package_name": "com.example.hello_world"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167947587158-74b8mpqg8bj4f2f0v5bhgmkp67i607rn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj1228OF3TKv4ce2KKVRhdvK8dPpMUb4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167947587158-74b8mpqg8bj4f2f0v5bhgmkp67i607rn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

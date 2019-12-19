@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class RandomWordsState extends State<RandomWords> {
+  final databaseReference = Firestore.instance;
   final _ceremonies = ["Ice Breakers", "Retrospectives", "Backlog Grooming", "Sprint Planning", "Stand-ups", "Sprint Review", "Showcase"];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _saved = Set<String>();
@@ -39,6 +42,15 @@ class RandomWordsState extends State<RandomWords> {
       MaterialPageRoute(builder: (context) => CeremonyList(ceremony)),
       
     );
+  }
+
+  void getData() {
+    databaseReference
+        .collection("ceremonies")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) => print('${f.data}}'));
+    });
   }
 
   void _pushSaved() {
@@ -106,6 +118,7 @@ class RandomWordsState extends State<RandomWords> {
         color: alreadySaved ? Colors.red : null,
         onPressed: () {
         setState(() {
+          getData();
           if (alreadySaved) {
             _saved.remove(ceremony);
           } else {
@@ -128,7 +141,7 @@ class RandomWords extends StatefulWidget {
 }
 
 class CeremonyListState extends State<CeremonyList> {
-  final _ceremonies = ["Ice Breakers", "Retrospectives", "Backlog Grooming", "Sprint Planning", "Stand-ups", "Sprint Review", "Showcase"];
+  final _ceremonies = ["blank", "what", "is", "Love", "Baby", "Don't", "hurt", "me"];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _saved = Set<String>();
   String ceremonyKey;
@@ -136,7 +149,6 @@ class CeremonyListState extends State<CeremonyList> {
   CeremonyListState(String ceremonyKey){
     this.ceremonyKey = ceremonyKey;
   }
-  
 
   @override
   Widget build(BuildContext buildContext) {
@@ -148,6 +160,14 @@ class CeremonyListState extends State<CeremonyList> {
         ],
       ),
       body: _buildList(),
+    );
+  }
+
+  void _navigateToCeremonyTemplate(ceremony) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony)),
+      
     );
   }
 
@@ -172,8 +192,7 @@ class CeremonyListState extends State<CeremonyList> {
         style: _biggerFont,
       ),
       trailing: IconButton( 
-        icon: Icon(alreadySaved ? Icons.favorite : Icons.favorite_border),
-        color: alreadySaved ? Colors.red : null,
+        icon: Icon(Icons.arrow_forward_ios),
         onPressed: () {
         setState(() {
           if (alreadySaved) {
@@ -184,19 +203,65 @@ class CeremonyListState extends State<CeremonyList> {
         });
         },
       ),
-      
+      onTap: () {
+        _navigateToCeremonyTemplate(ceremony);
+      }
     );
   }
 }
 
 class CeremonyList extends StatefulWidget {
+
   String ceremonyKey;
 
   CeremonyList(String ceremonyKey){
     this.ceremonyKey = ceremonyKey;
   }
 
-
   @override 
   CeremonyListState createState() => CeremonyListState(ceremonyKey);
+}
+
+class CeremonyTemplateState extends State<CeremonyTemplate> {
+  String ceremonyKey;
+
+  CeremonyTemplateState(String ceremonyKey){
+    this.ceremonyKey = ceremonyKey;
+  }
+
+  //Widget titleSection = 
+  
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(ceremonyKey),
+        actions: <Widget>[
+        ],
+      ),
+      body: ListView(
+        children: <Widget>[
+          Image.asset(
+            '/Users/bankwestmbs/Downloads/giphy.gif',
+            width: 600,
+            height: 240,
+          ),
+        ],
+      )
+    );
+  }
+
+
+}
+
+class CeremonyTemplate extends StatefulWidget {
+  String ceremonyKey;
+
+  CeremonyTemplate(String ceremonyKey){
+    this.ceremonyKey = ceremonyKey;
+  }
+
+  @override 
+  CeremonyTemplateState createState() => CeremonyTemplateState(ceremonyKey);
 }
