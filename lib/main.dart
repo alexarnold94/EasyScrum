@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Startup Name Generator',
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: Colors.blue,
       ),
       home: RandomWords(),
     );
@@ -24,12 +24,20 @@ class RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext buildContext) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Startup Name Generator'),
+        title: Text('EasyScrum'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
         ],
       ),
       body: _buildSuggestions(),
+    );
+  }
+
+  void _navigateToCeremonyList(ceremony) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CeremonyList(ceremony)),
+      
     );
   }
 
@@ -75,6 +83,16 @@ class RandomWordsState extends State<RandomWords> {
       
   }
 
+  void _favourite(alreadySaved, ceremony) {
+    setState(() {
+      if (alreadySaved) {
+        _saved.remove(ceremony);
+      } else {
+        _saved.add(ceremony);
+      }
+    });
+  }
+
   Widget _buildRow(String ceremony) {
     final bool alreadySaved = _saved.contains(ceremony);
 
@@ -83,11 +101,10 @@ class RandomWordsState extends State<RandomWords> {
         ceremony,
         style: _biggerFont,
       ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
+      trailing: IconButton( 
+        icon: Icon(alreadySaved ? Icons.arrow_forward : Icons.arrow_forward_ios),
         color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
+        onPressed: () {
         setState(() {
           if (alreadySaved) {
             _saved.remove(ceremony);
@@ -95,6 +112,11 @@ class RandomWordsState extends State<RandomWords> {
             _saved.add(ceremony);
           }
         });
+        },
+      ),
+      
+      onTap: () {
+        _navigateToCeremonyList(ceremony);
       }
     );
   }
@@ -103,4 +125,78 @@ class RandomWordsState extends State<RandomWords> {
 class RandomWords extends StatefulWidget {
   @override
   RandomWordsState createState() => RandomWordsState();
+}
+
+class CeremonyListState extends State<CeremonyList> {
+  final _ceremonies = ["Ice Breakers", "Retrospectives", "Backlog Grooming", "Sprint Planning", "Stand-ups", "Sprint Review", "Showcase"];
+  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final _saved = Set<String>();
+  String ceremonyKey;
+
+  CeremonyListState(String ceremonyKey){
+    this.ceremonyKey = ceremonyKey;
+  }
+  
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(ceremonyKey),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.list)),
+        ],
+      ),
+      body: _buildList(),
+    );
+  }
+
+  Widget _buildList() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemBuilder: (context, i) {        
+
+        return _buildRow(_ceremonies[i]);
+      },
+      itemCount: (_ceremonies.length),
+      );
+      
+  }
+
+  Widget _buildRow(String ceremony) {
+    final bool alreadySaved = _saved.contains(ceremony);
+
+    return ListTile(
+      title: Text(
+        ceremony,
+        style: _biggerFont,
+      ),
+      trailing: IconButton( 
+        icon: Icon(alreadySaved ? Icons.favorite : Icons.favorite_border),
+        color: alreadySaved ? Colors.red : null,
+        onPressed: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(ceremony);
+          } else {
+            _saved.add(ceremony);
+          }
+        });
+        },
+      ),
+      
+    );
+  }
+}
+
+class CeremonyList extends StatefulWidget {
+  String ceremonyKey;
+
+  CeremonyList(String ceremonyKey){
+    this.ceremonyKey = ceremonyKey;
+  }
+
+
+  @override 
+  CeremonyListState createState() => CeremonyListState(ceremonyKey);
 }
