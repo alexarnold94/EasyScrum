@@ -51,6 +51,7 @@ class RandomWordsState extends State<RandomWords> {
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) => print('${f.data}}'));
     });
+    print("test");
   }
 
   void _pushSaved() {
@@ -118,7 +119,7 @@ class RandomWordsState extends State<RandomWords> {
         color: alreadySaved ? Colors.red : null,
         onPressed: () {
         setState(() {
-          getData();
+          // getData();
           if (alreadySaved) {
             _saved.remove(ceremony);
           } else {
