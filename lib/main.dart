@@ -25,6 +25,7 @@ class RandomWordsState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext buildContext) {
+    getData();
     return Scaffold(
       appBar: AppBar(
         title: Text('EasyScrum'),
@@ -49,9 +50,9 @@ class RandomWordsState extends State<RandomWords> {
         .collection("ceremonies")
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => print('${f.data}}'));
+      snapshot.documents.forEach((f) => _ceremonies.add(f.data.toString()));
     });
-    print("test");
+    
   }
 
   void _pushSaved() {
