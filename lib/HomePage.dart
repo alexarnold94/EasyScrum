@@ -4,38 +4,69 @@ import 'CeremonyList.dart';
 
 class HomePageState extends State<HomePage> {
   final databaseReference = Firestore.instance;
-  final _ceremonies = ["Ice Breakers", "Retrospectives", "Backlog Grooming", "Sprint Planning", "Stand-ups", "Sprint Review", "Showcase"];
+  var _ceremoniesMap;
+  var _ceremonies = ['sad'];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _saved = Set<String>();
 
   @override
+  void initState() {
+    super.initState();
+    getCeremonies().then((data) {
+      setState(() {
+        var ceremoniesMap = new Map();
+        var keys = data.keys.toList().cast<String>();
+        var values = data.values.toList().cast<String>();
+        var count = 0;
+        values.forEach((f) => {
+          ceremoniesMap[f] = keys[count], count++
+        });
+        this._ceremoniesMap = ceremoniesMap;
+        this._ceremonies = values;
+        });
+      });
+    }
+
+  @override
   Widget build(BuildContext buildContext) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('EasyScrum'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
-        ],
-      ),
-      body: _buildSuggestions(),
-    );
+
+    if (_ceremoniesMap == null){
+      getCeremonies();
+      return Scaffold();
+    }
+    else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('EasyScrum'),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+          ],
+        ),
+        body: _buildSuggestions(),
+      );
+    }
   }
 
-  void _navigateToCeremonyList(ceremony) {
+  void _navigateToCeremonyList(ceremonyKey, ceremony) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CeremonyList(ceremony)),
+      MaterialPageRoute(builder: (context) => CeremonyList(ceremonyKey, ceremony)),
 
     );
   }
 
-  void getData() {
-    databaseReference
+  Future<Map> getCeremonies() async {
+    var retVal = new Map();
+
+    await databaseReference
         .collection("ceremonies")
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => print('${f.data}}'));
+      snapshot.documents.forEach((f) => {
+        retVal[f.data['key']] = f.data['name']
+      });
     });
+    return retVal;
   }
 
   void _pushSaved() {
@@ -103,7 +134,7 @@ class HomePageState extends State<HomePage> {
           color: alreadySaved ? Colors.red : null,
           onPressed: () {
             setState(() {
-              getData();
+              //getData();
               if (alreadySaved) {
                 _saved.remove(ceremony);
               } else {
@@ -114,7 +145,7 @@ class HomePageState extends State<HomePage> {
         ),
 
         onTap: () {
-          _navigateToCeremonyList(ceremony);
+          _navigateToCeremonyList(_ceremoniesMap[ceremony], ceremony);
         }
     );
   }
