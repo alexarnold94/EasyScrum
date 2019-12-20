@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'CeremonyTemplate.dart';
 
 class CeremonyListState extends State<CeremonyList> {
-  final _ceremonies = ["blank", "what", "is", "Love", "Baby", "Don't", "hurt", "me"];
+  //final _ceremonies = ["blank", "what", "is", "Love", "Baby", "Don't", "hurt", "me"];
+  var _ceremonies = [];
+  var jsonData = [];
+  final databaseReference = Firestore.instance;
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _saved = Set<String>();
   String ceremonyKey;
@@ -12,10 +17,21 @@ class CeremonyListState extends State<CeremonyList> {
   CeremonyListState(String ceremonyKey, String ceremony){
     this.ceremonyKey = ceremonyKey;
     this.ceremony = ceremony;
+    getData(this.ceremonyKey);
   }
+
+  // @override
+  // void initState(){
+  //   getData(this.ceremonyKey).then(data) {
+  //     setState(() {
+  //       this._ceremonies = data;
+  //     });
+  //   };
+  // }
 
   @override
   Widget build(BuildContext buildContext) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(ceremony),
@@ -33,6 +49,26 @@ class CeremonyListState extends State<CeremonyList> {
       MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony)),
 
     );
+  }
+
+  getData(ceremonyKey) async{
+    
+    await databaseReference
+        .collection("recipes")  
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) => {
+        this.jsonData.add(f.data),
+      });
+    });
+    
+    setState(() {
+      jsonData.forEach((f) => {
+        this._ceremonies.add(f['name']),
+      });
+      
+    });
+    
   }
 
   Widget _buildList() {
