@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Startup Name Generator',
+      title: 'EasyScrum',
       theme: ThemeData(
         primaryColor: Colors.deepPurple,
       ),
@@ -15,3 +15,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
