@@ -3,22 +3,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddTemplateForm extends StatefulWidget {
   String ceremonyName;
+  String ceremonyKey;
 
-  AddTemplateForm(String ceremonyName) {
+  AddTemplateForm(String ceremonyName, String ceremonyKey) {
     this.ceremonyName = ceremonyName;
+    this.ceremonyKey = ceremonyKey;
   }
 
   @override
   AddTemplateFormState createState() {
-    return AddTemplateFormState(ceremonyName);
+    return AddTemplateFormState(ceremonyName, ceremonyKey);
   }
+}
+
+class _FormData {
+  String recipeName = '';
+  String minParticipants = '';
+  String maxParticipants = '';
+  String materialsNeeded = '';
+  String method = '';
 }
 
 class AddTemplateFormState extends State<AddTemplateForm> {
   final _formKey = GlobalKey<FormState>();
+  final databaseReference = Firestore.instance;
   String ceremonyName;
+  _FormData _data = new _FormData();
 
-  AddTemplateFormState(String ceremonyName) {
+  AddTemplateFormState(String ceremonyName, String ceremonyKey) {
     this.ceremonyName = ceremonyName;
   }
 
@@ -30,6 +42,8 @@ class AddTemplateFormState extends State<AddTemplateForm> {
           title: Text("Add new " + ceremonyName),
         ),
         body: Form(
+          key: _formKey,
+          autovalidate: true,
             child: Column(children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +65,9 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                       }
                       return null;
                     },
+                    onSaved: (String value) {
+                      this._data.recipeName = value;
+                    },
                   ),
                 ),
               ]),
@@ -65,6 +82,9 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                       }
                       return null;
                     },
+                    onSaved: (String value) {
+                      this._data.minParticipants = value;
+                    },
                   ),
                 ),
                 Expanded(
@@ -76,6 +96,9 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                         return 'Please enter a value';
                       }
                       return null;
+                    },
+                    onSaved: (String value) {
+                      this._data.maxParticipants = value;
                     },
                   ),
                 ),
@@ -92,6 +115,9 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                       }
                       return null;
                     },
+                    onSaved: (String value) {
+                      this._data.materialsNeeded = value;
+                    },
                   ),
                 ),
               ]),
@@ -107,6 +133,9 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                       }
                       return null;
                     },
+                    onSaved: (String value) {
+                      this._data.method = value;
+                    },
                   ),
                 ),
               ]),
@@ -121,6 +150,11 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                         // the form is invalid.
                         if (_formKey.currentState.validate()) {
                           // Process data.
+                          _formKey.currentState.save();
+                          createRecipe(_data);
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Form Submitted!"),
+                          ));
                         }
                       },
                       child: Text('Submit'),
@@ -129,5 +163,18 @@ class AddTemplateFormState extends State<AddTemplateForm> {
                 ],
               )
         ])));
+  }
+
+  void createRecipe(_FormData data) async {
+    await databaseReference.collection("recipes").add(
+      {
+        'ceremony_key': ceremonyName,
+        'name': data.recipeName,
+        'method': data.method,
+        'number_of_participants': data.minParticipants + '-' + data.maxParticipants,
+        'required_materials': data.materialsNeeded,
+        'image_ref': '',
+      }
+    );
   }
 }

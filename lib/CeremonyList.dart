@@ -33,13 +33,13 @@ class CeremonyListState extends State<CeremonyList> {
   }
 
   void _pushAdd() {
-    _navigateToAddTemplate(ceremonyKey);
+    _navigateToAddTemplate(ceremony, ceremonyKey);
   }
 
-  void _navigateToAddTemplate(ceremony) {
+  void _navigateToAddTemplate(ceremony, ceremonyKey) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddTemplateForm(ceremony)),
+      MaterialPageRoute(builder: (context) => AddTemplateForm(ceremony, ceremonyKey)),
     );
   }
 
