@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'CeremonyTemplate.dart';
+import 'AddTemplate.dart';
 
 class CeremonyListState extends State<CeremonyList> {
   final _ceremonies = ["blank", "what", "is", "Love", "Baby", "Don't", "hurt", "me"];
@@ -20,10 +21,21 @@ class CeremonyListState extends State<CeremonyList> {
       appBar: AppBar(
         title: Text(ceremony),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.list)),
+          IconButton(icon: Icon(Icons.add), onPressed: _pushAdd),
         ],
       ),
       body: _buildList(),
+    );
+  }
+
+  void _pushAdd() {
+    _navigateToAddTemplate(ceremonyKey);
+  }
+
+  void _navigateToAddTemplate(ceremony) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddTemplateForm(ceremony)),
     );
   }
 
