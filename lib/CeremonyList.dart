@@ -6,7 +6,6 @@ import 'CeremonyTemplate.dart';
 import 'AddTemplate.dart';
 
 class CeremonyListState extends State<CeremonyList> {
-  //final _ceremonies = ["blank", "what", "is", "Love", "Baby", "Don't", "hurt", "me"];
   var _ceremonies = [];
   var jsonData = [];
   final databaseReference = Firestore.instance;
@@ -20,15 +19,6 @@ class CeremonyListState extends State<CeremonyList> {
     this.ceremony = ceremony;
     getData(this.ceremonyKey);
   }
-
-  // @override
-  // void initState(){
-  //   getData(this.ceremonyKey).then(data) {
-  //     setState(() {
-  //       this._ceremonies = data;
-  //     });
-  //   };
-  // }
 
   @override
   Widget build(BuildContext buildContext) {
@@ -56,9 +46,17 @@ class CeremonyListState extends State<CeremonyList> {
   }
 
   void _navigateToCeremonyTemplate(ceremony) {
+    var ceremonyData = [];
+    // if (jsonData != null) {
+    //     jsonData.forEach((f) => {
+    //       if (f['name'] == ceremony) {
+    //         ceremonyData = f
+    //       }
+    //     });
+    //   }
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony)),
+      MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony, ceremonyData)),
 
     );
   }
@@ -79,11 +77,8 @@ class CeremonyListState extends State<CeremonyList> {
         if ( f['ceremony_key'] == ceremonyKey) {
           this._ceremonies.add(f['name']),
         }
-        
       });
-      
     });
-    
   }
 
   Widget _buildList() {

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CeremonyTemplateState extends State<CeremonyTemplate> {
-  String ceremonyKey;
+  String ceremonyName;
+  var jsonData = [];
   static final String numPeople = "4-12";
 
 
-  CeremonyTemplateState(String ceremonyKey){
-    this.ceremonyKey = ceremonyKey;
+  CeremonyTemplateState(String ceremonyName, var jsonData){
+    this.ceremonyName = ceremonyName;
+    this.jsonData = jsonData;
+    //print(jsonData[0]['name']);
   }
 
   Widget pSection = Container(
@@ -97,7 +100,7 @@ class CeremonyTemplateState extends State<CeremonyTemplate> {
   Widget build(BuildContext buildContext) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(ceremonyKey),
+          title: Text(ceremonyName),
           actions: <Widget>[
           ],
         ),
@@ -121,12 +124,14 @@ class CeremonyTemplateState extends State<CeremonyTemplate> {
 
 
 class CeremonyTemplate extends StatefulWidget {
-  String ceremonyKey;
+  String ceremonyName;
+  var jsonData;
 
-  CeremonyTemplate(String ceremonyKey){
-    this.ceremonyKey = ceremonyKey;
+  CeremonyTemplate(String ceremonyName, var jsonData){
+    this.ceremonyName = ceremonyName;
+    this.jsonData = jsonData;
   }
 
   @override
-  CeremonyTemplateState createState() => CeremonyTemplateState(ceremonyKey);
+  CeremonyTemplateState createState() => CeremonyTemplateState(ceremonyName, jsonData);
 }
