@@ -64,7 +64,12 @@ class CeremonyListState extends State<CeremonyList> {
     
     setState(() {
       jsonData.forEach((f) => {
-        this._ceremonies.add(f['name']),
+        if ( f['ceremony_key'] == ceremonyKey) {
+          this._ceremonies.add(f['name']),
+          print(f['name']),
+
+        }
+        
       });
       
     });
