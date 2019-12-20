@@ -4,13 +4,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CeremonyTemplateState extends State<CeremonyTemplate> {
   String ceremonyName;
   var jsonData = [];
-  static final String numPeople = "4-12";
+  static String numPeople = "4-12";
+  static String requiredMaterials = "post-it notes\nwhiteboard";
+  static String method = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis maximus fermentum ullamcorper. Aenean purus enim, rutrum ac fringilla at, accumsan eu orci. In et turpis ac odio semper facilisis placerat non massa. Sed vestibulum sagittis erat at scelerisque. Cras et scelerisque dolor, vitae rutrum nunc. Mauris euismod facilisis nulla, id lobortis turpis consectetur nec. Donec tellus nunc, vehicula eu finibus ut, porttitor eu turpis. Vivamus in hendrerit lorem. Aliquam erat volutpat. In sit amet convallis est. Pellentesque id purus at dolor congue elementum quis nec ligula.";
+  // static final String numPeople = "4-12";
 
 
   CeremonyTemplateState(String ceremonyName, var jsonData){
     this.ceremonyName = ceremonyName;
     this.jsonData = jsonData;
-    //print(jsonData[0]['name']);
+    // var tempPeople;
+    // var tempMaterials;
+    // var tempMethod;
+    
+    
+    // jsonData.forEach((f) => {
+    //   if (f['name'] == ceremonyName) {
+    //     this.numPeople = f['number_of_participants'],
+    //     this.requiredMaterials = f['required_materials'],
+    //     this.method = f['method'],
+    //     print(f),
+    //     print(this.jsonData)
+    //   }
+    // });
+
+    // this.numPeople = f['number_of_participants'],
+    //     this.requiredMaterials = f['required_materials'],
+    //     this.method = f['method'],
+      
   }
 
   Widget pSection = Container(
@@ -57,7 +78,7 @@ class CeremonyTemplateState extends State<CeremonyTemplate> {
                 ),
               ),
               Text(
-                "post-it notes\nwhiteboard",
+                requiredMaterials,
                 style: TextStyle(color: Colors.grey[500]),
               ),
 
@@ -84,7 +105,7 @@ class CeremonyTemplateState extends State<CeremonyTemplate> {
                 ),
               ),
               Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis maximus fermentum ullamcorper. Aenean purus enim, rutrum ac fringilla at, accumsan eu orci. In et turpis ac odio semper facilisis placerat non massa. Sed vestibulum sagittis erat at scelerisque. Cras et scelerisque dolor, vitae rutrum nunc. Mauris euismod facilisis nulla, id lobortis turpis consectetur nec. Donec tellus nunc, vehicula eu finibus ut, porttitor eu turpis. Vivamus in hendrerit lorem. Aliquam erat volutpat. In sit amet convallis est. Pellentesque id purus at dolor congue elementum quis nec ligula.",
+                method,
                 style: TextStyle(color: Colors.grey[500]),
               ),
 
@@ -95,9 +116,22 @@ class CeremonyTemplateState extends State<CeremonyTemplate> {
     ),
   );
 
+  void setData(){
+    this.jsonData.forEach((f) => {
+      if (f['name'] == ceremonyName) {
+        CeremonyTemplateState.numPeople = f['number_of_participants'] == null ? 'Nothing' : f['number_of_participants'], 
+        CeremonyTemplateState.requiredMaterials = f['required_materials'] == null ? 'Nothing' : f['required_materials'],
+        CeremonyTemplateState.method = f['method'] == null ? 'Nothing' : f['method'],
+        print(f),
+        print(this.jsonData)
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext buildContext) {
+
+    setData();
     return Scaffold(
         appBar: AppBar(
           title: Text(ceremonyName),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'CeremonyTemplate.dart';
@@ -46,17 +44,9 @@ class CeremonyListState extends State<CeremonyList> {
   }
 
   void _navigateToCeremonyTemplate(ceremony) {
-    var ceremonyData = [];
-    // if (jsonData != null) {
-    //     jsonData.forEach((f) => {
-    //       if (f['name'] == ceremony) {
-    //         ceremonyData = f
-    //       }
-    //     });
-    //   }
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony, ceremonyData)),
+      MaterialPageRoute(builder: (context) => CeremonyTemplate(ceremony, jsonData)),
 
     );
   }
