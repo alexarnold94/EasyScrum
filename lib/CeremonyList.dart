@@ -7,16 +7,18 @@ class CeremonyListState extends State<CeremonyList> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _saved = Set<String>();
   String ceremonyKey;
+  String ceremony;
 
-  CeremonyListState(String ceremonyKey){
+  CeremonyListState(String ceremonyKey, String ceremony){
     this.ceremonyKey = ceremonyKey;
+    this.ceremony = ceremony;
   }
 
   @override
   Widget build(BuildContext buildContext) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ceremonyKey),
+        title: Text(ceremony),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list)),
         ],
@@ -75,11 +77,13 @@ class CeremonyListState extends State<CeremonyList> {
 class CeremonyList extends StatefulWidget {
 
   String ceremonyKey;
+  String ceremony;
 
-  CeremonyList(String ceremonyKey){
+  CeremonyList(String ceremonyKey, String ceremony){
     this.ceremonyKey = ceremonyKey;
+    this.ceremony = ceremony;
   }
 
   @override
-  CeremonyListState createState() => CeremonyListState(ceremonyKey);
+  CeremonyListState createState() => CeremonyListState(ceremonyKey, ceremony);
 }
